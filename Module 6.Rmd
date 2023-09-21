@@ -1,0 +1,39 @@
+---
+title: "Module 6"
+author: "Bhavya Deepti Vadavalli"
+date: "2023-09-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+``` {r accessingfile}
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall23/Country-Data-2016.csv")
+d <- read.csv(f, header = TRUE, sep = ",", stringsAsFactors = FALSE)
+head(d)
+```
+
+# Challenge 1
+
+``` {r exploringdata}
+summary(d)
+names(d)
+d$density <- d$population/d$area
+d <- d[order(-d$density), ]
+d[1:10, ]
+
+d <- d[order(d$density), ]
+d[1:10, ]
+```
+
+# Plots 
+
+```{r plots}
+f <- curl("https://raw.githubusercontent.com/fuzzyatelin/fuzzyatelin.github.io/master/AN588_Fall23/KamilarAndCooperData.csv")
+d <- read.csv(f, header = TRUE, stringsAsFactors = FALSE)
+attach(d)
+head(d)
+boxplot(log(Body_mass_female_mean) ~ Family, d)
+```
