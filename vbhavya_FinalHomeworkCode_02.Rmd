@@ -1,0 +1,122 @@
+---
+title: "AN/BI 588 - Homework 2"
+author: "Bhavya Deepti Vadavalli"
+date: "2023-09-28"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r titis, echo=FALSE, out.width = '50%', fig.align ='center', fig.cap= "Titis in the Mist!"}
+knitr::include_graphics("titimonkey_003.jpg")
+```
+
+# It's a Poisson distribution!
+The scientist sits for a two hour session every Saturday morning. 
+
+lambda = mean number of calls per session = 15
+
+X is the random variable that will denote the number of calls heard during a session. 
+
+The pdf is of the form:
+
+## Question 1) What is the probability that she will hear more than 8 calls during any given session?
+
+In order to find the probability that X > 8, we can calculate 1 - cdf (X = 8). 
+
+Note that the term cdf (X = 8) is technically not correct because cdf is an integral of a continuous function (pdf of a Poisson RV). Therefore, it is acontinuous function itself. This means the value of the function at any one discrete point will be 0. 
+
+Here, cdf (X = x) really indicates an integral of pdf taken from X = 0 to x. 
+
+``` {r question1}
+#q1 is the pr (X > 8)
+q1 <- 1 - ppois(q = 8, lambda = 15, lower.tail = TRUE) 
+#using the ppois() function to get the value of 1 - pr (X less than or equal to 8)
+q1
+```
+Trying the code without lower.tail = TRUE. It looks like the default is to set lower.tail = TRUE. I did try setting it to FALSE and as expected, it gave me the complement of the value. 
+
+I initially had the urge to just use ppois(q = 8, lambda = 15, lower.tail = FALSE), instead of 1 - ppois(q = 8, lambda = 15). But, then remembered that it wouldn't give the correct answer (I think). 
+
+``` {r take2}
+#q1 is the pr (X > 8)
+q1 <- 1 - ppois(q = 8, lambda = 15) 
+#using the ppois() function to get the value of 1 - pr (X less than or equal to 8)
+q1
+```
+## Question 2) What is the probability that she will hear no calls in a session?
+
+``` {r question2}
+q2 <- dpois(x = 0, lambda = 15)
+q2 #the probability is very small!
+```
+
+## Question 3) What is the probability that she will hear exactly 3 calls in a session?
+
+Since, this question only asks us to calculate the Pr (X = 3), dpois() is the relevant function to use. 
+``` {r question3}
+q3 <- dpois(x = 3, lambda = 15)
+q3 
+```
+## Question 4) Plot the relevant Poisson mass function over the values in range 0 ≤ x ≤ 30.
+
+For this, we can simply define x as values between 0 to 30, that the function dpois() needs to run through and then plot the output as a barplot. 
+
+```{r question4}
+x <- 0:30 #originally, it was 1:30, my mistake. I've fixed this. Thanks, Brooke!
+
+pdf <- dpois(x = x, lambda = 15) #pdf is the function for the poisson function between X = 0 and 30.
+
+#Plotting the function
+barplot(pdf, x, space = 0, xlab = "x", ylab = "Pr(X = x)", 
+        main = "Poisson Probability Mass Function")
+```
+
+## Question 5) Simulate 104 results from this distribution. 
+```{r question5}
+set.seed(19)
+n = 104 #number of simulations
+sim <- rpois(n = 104, lambda = 15)
+```
+
+## Question 6) Plot the simulated results using hist() and use xlim() to set the horizontal limits to be from 0 to 30. How does your histogram compare to the shape of the probability mass function you plotted above
+
+```{r question6}
+hist(sim, xlim = range(0:30), freq = FALSE,
+     main = "Plots: Simulated results from the poisson distribution (X = 0 to 30)", 
+     xlab = "No. of calls heard", ylab = "Probability (X = x)")
+```
+
+### Comparison between simulated data and the pmf plot: 
+The simulated ata gives a very heavy tailed, or rather a plot with a positive kurtosis (do we use kurtosis for functions other than Normal distributions?). This suggests that the simulated data is closer to the mean that the theoretical pmf. I think this might just be a function of the data simulation being random. Perhaps another simulation might give a plot that looks almost identical to the theoretical pmf. 
+
+However, overall, the simulated data looks quite similar to the theoretical pmf. It looks like a skewed normal distribution, and is skewed towards the values closer to zero.
+
+## Challenges I Faced: 
+1. I think I always get a bit confused about which function to use when simulating. And intuitively, I have some trouble understanding what the 'n' simulations actually mean instead of n trials. 
+2. I' wanted to put equations in the I'm not sure I fully understand the lower.tail argument in ppois(). I think I've used it correctly though. 
+3. In question 2, I had intitially wanted to use ppois() but that didn't give me an answer, but dpois() did. I'm not sure I understand why it makes a difference. 
+
+## Peer Commentary
+* Formatting: Your formatting looks good. Adorable titi picture! You could add a caption to the image if you wanted to practice making captions.
+* Question 1: I like how well you explain your reasononing for this and the questions. I am also not sure about what the purpose is of using the lower.tail argument. When I didn't include it, I got the same answer. Also, does your code account for not including the probability of x = 8?
+* Questions 2 and 3: Very straightforward and looking good!
+* Question 4: You state that you define values between 0 and 30, but in your actual code you have 1 to 30. Also, I cannot figure out why, but your barplot looks different than mine and the others I've seen. Everyone's that I've seen has appeared to have the highest density around 15 but your highest densities occur at lower x values. I cannot see any difference in our codes that would explain this.
+* Question 5: Good, clear code. If you wanted, you could set the seed for the random numbers so that the same numbers are produced every time the code is run.
+* Question 6: Histogram is looking good. You have the y-axis labeled as probability but I think the hist() function might actually default to showing the number of counts/frequency in this case and you would have to use the argument freq = FALSE to get probabilities. Since the number of simulations is close to 100, the counts look really close to probabilities as percents.
+* Also question 6: don't forget to answer the question of how your simulated data histogram compares to the function's barplot!
+* Overall: Nice efficient, well-organized, and annotated code!
+
+## Response to Peer Commentary (Thanks, Brooke!)
+1. Caption added. Thanks for the suggestion. 
+2. For question 1, I tried to fiddle with the lower.tail setting. I've put my thoughts up there. 
+2. For question for, I think it was a hindsight on part to put 1 to 30. I've fixed it. Hopefully it looks like it is supposed to now.
+3. Question 6: I've set freq = FALSE. Thank you for pointing that out. I did this because I wanted to compare the pmf of the function to the histogram of the simulated data, and I thought it'd be easier to compare the values when both y axes were set to probabilities. 
+4. Thanks for reminding me to compare the plots. It completely slipped my mind. 
+
+NOTE: My original teammate was supposed to be Billy Sanders. But, due to his unavailability, Brooke stepped in and gave me peer comments to help me finish the assignment. 
