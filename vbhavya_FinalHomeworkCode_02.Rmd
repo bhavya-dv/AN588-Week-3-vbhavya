@@ -73,7 +73,7 @@ x <- 0:30 #originally, it was 1:30, my mistake. I've fixed this. Thanks, Brooke!
 pdf <- dpois(x = x, lambda = 15) #pdf is the function for the poisson function between X = 0 and 30.
 
 #Plotting the function
-barplot(pdf, x, space = 0, xlab = "x", ylab = "Pr(X = x)", 
+barplot(pdf, names.arg = x, xlab = "x", ylab = "Pr(X = x)", 
         main = "Poisson Probability Mass Function")
 ```
 
